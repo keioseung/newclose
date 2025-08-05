@@ -5,10 +5,16 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function formatDuration(seconds: number): string {
-  const hours = Math.floor(seconds / 3600)
-  const minutes = Math.floor((seconds % 3600) / 60)
-  const remainingSeconds = seconds % 60
+export function formatDuration(duration: string | number): string {
+  if (typeof duration === 'string') {
+    // "3:45" 형태의 문자열을 그대로 반환
+    return duration;
+  }
+  
+  // 숫자(초)를 받은 경우 기존 로직 사용
+  const hours = Math.floor(duration / 3600)
+  const minutes = Math.floor((duration % 3600) / 60)
+  const remainingSeconds = duration % 60
 
   if (hours > 0) {
     return `${hours}:${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`

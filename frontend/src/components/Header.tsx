@@ -1,63 +1,104 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { Search, Plus, Menu, User } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { useState } from 'react';
+import { Search, Menu, Upload, Bell, User, X } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface HeaderProps {
-  onMenuToggle: () => void
-  onUploadClick: () => void
+  onMenuToggle: () => void;
+  onUploadClick: () => void;
 }
 
 export default function Header({ onMenuToggle, onUploadClick }: HeaderProps) {
-  const [searchQuery, setSearchQuery] = useState('')
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
 
   return (
-    <header className="bg-white border-b border-gray-200 px-6 py-4">
-      <div className="flex items-center justify-between">
-        {/* Left side */}
-        <div className="flex items-center space-x-4">
-          <button
-            onClick={onMenuToggle}
-            className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
-          >
-            <Menu className="w-5 h-5" />
-          </button>
-          
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search className="h-5 w-5 text-gray-400" />
+    <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-gray-200/50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          {/* Left side - Menu and Logo */}
+          <div className="flex items-center space-x-4">
+            <button
+              onClick={onMenuToggle}
+              className="p-2 rounded-xl hover:bg-gray-100 transition-colors duration-200 md:hidden"
+              aria-label="Toggle menu"
+            >
+              <Menu className="h-6 w-6 text-gray-600" />
+            </button>
+            
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-purple-600 rounded-xl flex items-center justify-center">
+                <span className="text-white font-bold text-sm">C</span>
+              </div>
+              <h1 className="text-xl font-bold gradient-text hidden sm:block">
+                CloseTube
+              </h1>
             </div>
-            <input
-              type="text"
-              placeholder="영상 검색..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-            />
           </div>
-        </div>
 
-        {/* Right side */}
-        <div className="flex items-center space-x-4">
-          <button
-            onClick={onUploadClick}
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            영상 업로드
-          </button>
-          
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-primary-600 rounded-full flex items-center justify-center">
-              <User className="w-4 h-4 text-white" />
+          {/* Center - Search Bar */}
+          <div className="flex-1 max-w-2xl mx-4">
+            <div className={cn(
+              "search-bar transition-all duration-300",
+              isSearchFocused && "scale-105"
+            )}>
+              <Search className="search-icon h-5 w-5" />
+              <input
+                type="text"
+                placeholder="Search videos..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => setIsSearchFocused(true)}
+                onBlur={() => setIsSearchFocused(false)}
+                className="search-input"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 rounded-full hover:bg-gray-100 transition-colors duration-200"
+                >
+                  <X className="h-4 w-4 text-gray-400" />
+                </button>
+              )}
             </div>
-            <span className="hidden sm:block text-sm font-medium text-gray-700">
-              마루니
-            </span>
+          </div>
+
+          {/* Right side - Actions */}
+          <div className="flex items-center space-x-2">
+            {/* Upload Button */}
+            <button
+              onClick={onUploadClick}
+              className="btn-primary hidden sm:flex items-center space-x-2"
+            >
+              <Upload className="h-4 w-4" />
+              <span>Upload Video</span>
+            </button>
+            
+            {/* Mobile Upload Button */}
+            <button
+              onClick={onUploadClick}
+              className="p-3 bg-primary-600 text-white rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300 sm:hidden"
+              aria-label="Upload video"
+            >
+              <Upload className="h-5 w-5" />
+            </button>
+
+            {/* Notifications */}
+            <button className="p-2 rounded-xl hover:bg-gray-100 transition-colors duration-200 relative">
+              <Bell className="h-5 w-5 text-gray-600" />
+              <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
+            </button>
+
+            {/* User Profile */}
+            <button className="p-2 rounded-xl hover:bg-gray-100 transition-colors duration-200">
+              <div className="w-8 h-8 bg-gradient-to-br from-gray-400 to-gray-600 rounded-full flex items-center justify-center">
+                <User className="h-4 w-4 text-white" />
+              </div>
+            </button>
           </div>
         </div>
       </div>
     </header>
-  )
+  );
 } 

@@ -9,9 +9,11 @@ export interface Video {
   views: number;
   likes: number;
   comments: number;
+  uploadDate: Date;
   createdAt: Date;
-  group: string;
-  privacy: 'private' | 'group' | 'public';
+  isLiked: boolean;
+  group?: string;
+  privacy?: 'private' | 'group' | 'public';
 }
 
 export interface Group {
@@ -40,11 +42,10 @@ export interface Comment {
 }
 
 export interface VideoUploadData {
+  url: string;
   title: string;
   description?: string;
-  url: string;
   group: string;
-  privacy: 'private' | 'group' | 'public';
-  downloadDisabled: boolean;
-  externalShareDisabled: boolean;
+  allowDownload: boolean;
+  allowExternalShare: boolean;
 } 

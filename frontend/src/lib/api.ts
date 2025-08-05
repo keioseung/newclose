@@ -1,98 +1,70 @@
-import { Video, VideoUploadData, Comment } from '@/types'
+import { Video, VideoUploadData } from '@/types';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
-export async function fetchVideos(group?: string): Promise<Video[]> {
+export async function fetchVideos(): Promise<Video[]> {
   try {
-    const url = group && group !== '전체' 
-      ? `${API_BASE_URL}/videos?group=${encodeURIComponent(group)}`
-      : `${API_BASE_URL}/videos`
-    
-    const response = await fetch(url)
+    const response = await fetch(`${API_BASE_URL}/videos`);
     if (!response.ok) {
-      throw new Error('Failed to fetch videos')
+      throw new Error('Failed to fetch videos');
     }
-    
-    const data = await response.json()
-    return data.map((video: any) => ({
-      ...video,
-      createdAt: new Date(video.created_at),
-    }))
+    return await response.json();
   } catch (error) {
-    console.error('Error fetching videos:', error)
-    return []
+    console.error('Error fetching videos:', error);
+    throw error;
   }
 }
 
-export async function createVideo(videoData: VideoUploadData): Promise<Video | null> {
+export async function createVideo(data: VideoUploadData): Promise<Video> {
   try {
     const response = await fetch(`${API_BASE_URL}/videos`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        title: videoData.title,
-        description: videoData.description,
-        url: videoData.url,
-        group: videoData.group,
-        privacy: videoData.privacy,
-        download_disabled: videoData.downloadDisabled,
-        external_share_disabled: videoData.externalShareDisabled,
-      }),
-    })
+      body: JSON.stringify(data),
+    });
     
     if (!response.ok) {
-      throw new Error('Failed to create video')
+      throw new Error('Failed to create video');
     }
     
-    const data = await response.json()
-    return {
-      ...data,
-      createdAt: new Date(data.created_at),
-    }
+    return await response.json();
   } catch (error) {
-    console.error('Error creating video:', error)
-    return null
+    console.error('Error creating video:', error);
+    throw error;
   }
 }
 
-export async function likeVideo(videoId: string): Promise<boolean> {
+export async function likeVideo(videoId: string): Promise<void> {
   try {
     const response = await fetch(`${API_BASE_URL}/videos/${videoId}/like`, {
       method: 'POST',
-    })
+    });
     
     if (!response.ok) {
-      throw new Error('Failed to like video')
+      throw new Error('Failed to like video');
     }
-    
-    return true
   } catch (error) {
-    console.error('Error liking video:', error)
-    return false
+    console.error('Error liking video:', error);
+    throw error;
   }
 }
 
-export async function fetchComments(videoId: string): Promise<Comment[]> {
+export async function fetchComments(videoId: string): Promise<any[]> {
   try {
-    const response = await fetch(`${API_BASE_URL}/videos/${videoId}/comments`)
+    const response = await fetch(`${API_BASE_URL}/videos/${videoId}/comments`);
     if (!response.ok) {
-      throw new Error('Failed to fetch comments')
+      throw new Error('Failed to fetch comments');
     }
-    
-    const data = await response.json()
-    return data.map((comment: any) => ({
-      ...comment,
-      createdAt: new Date(comment.created_at),
-    }))
+    return await response.json();
   } catch (error) {
-    console.error('Error fetching comments:', error)
-    return []
+    console.error('Error fetching comments:', error);
+    throw error;
   }
 }
 
-export async function createComment(videoId: string, content: string): Promise<Comment | null> {
+export async function createComment(videoId: string, content: string): Promise<any> {
   try {
     const response = await fetch(`${API_BASE_URL}/videos/${videoId}/comments`, {
       method: 'POST',
@@ -100,20 +72,16 @@ export async function createComment(videoId: string, content: string): Promise<C
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ content }),
-    })
+    });
     
     if (!response.ok) {
-      throw new Error('Failed to create comment')
+      throw new Error('Failed to create comment');
     }
     
-    const data = await response.json()
-    return {
-      ...data,
-      createdAt: new Date(data.created_at),
-    }
+    return await response.json();
   } catch (error) {
-    console.error('Error creating comment:', error)
-    return null
+    console.error('Error creating comment:', error);
+    throw error;
   }
 }
 

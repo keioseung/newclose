@@ -1,140 +1,167 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
+import { useState } from 'react';
 import { 
   Home, 
-  Video, 
+  Users, 
   Heart, 
   Clock, 
-  Users, 
-  Plus, 
-  UserPlus, 
-  Settings,
-  Menu
-} from 'lucide-react'
-import { cn } from '@/lib/utils'
+  Settings, 
+  HelpCircle, 
+  X,
+  ChevronRight,
+  Video,
+  FolderOpen,
+  Star
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface SidebarProps {
-  isOpen: boolean
-  onToggle: () => void
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-export default function Sidebar({ isOpen, onToggle }: SidebarProps) {
-  const [activeItem, setActiveItem] = useState('home')
+export default function Sidebar({ isOpen, onClose }: SidebarProps) {
+  const [activeGroup, setActiveGroup] = useState('가족');
 
-  const menuItems = [
-    { id: 'home', icon: Home, label: '홈' },
-    { id: 'videos', icon: Video, label: '내 영상' },
-    { id: 'likes', icon: Heart, label: '좋아요' },
-    { id: 'history', icon: Clock, label: '시청 기록' },
-  ]
+  const navigation = [
+    { name: '홈', icon: Home, href: '#', count: null },
+    { name: '내 영상', icon: Video, href: '#', count: 12 },
+    { name: '좋아요', icon: Heart, href: '#', count: 8 },
+    { name: '최근 시청', icon: Clock, href: '#', count: null },
+    { name: '설정', icon: Settings, href: '#', count: null },
+    { name: '도움말', icon: HelpCircle, href: '#', count: null },
+  ];
 
   const groups = [
-    { name: '가족', count: 4 },
-    { name: '친구들', count: 6 },
-    { name: '팀 프로젝트', count: 3 },
-  ]
-
-  const tools = [
-    { icon: Plus, label: '새 그룹 만들기' },
-    { icon: UserPlus, label: '멤버 초대' },
-    { icon: Settings, label: '설정' },
-  ]
+    { name: '가족', icon: Users, memberCount: 5, color: 'bg-gradient-to-br from-blue-500 to-blue-600' },
+    { name: '친구들', icon: Users, memberCount: 8, color: 'bg-gradient-to-br from-green-500 to-green-600' },
+    { name: '팀 프로젝트', icon: Users, memberCount: 12, color: 'bg-gradient-to-br from-purple-500 to-purple-600' },
+    { name: '동호회', icon: Users, memberCount: 15, color: 'bg-gradient-to-br from-orange-500 to-orange-600' },
+  ];
 
   return (
     <>
       {/* Mobile overlay */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-          onClick={onToggle}
+          className="sidebar-mobile"
+          onClick={onClose}
         />
       )}
 
       {/* Sidebar */}
-      <nav className={cn(
-        "fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 z-50 transform transition-transform duration-300 ease-in-out",
-        isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+      <div className={cn(
+        "sidebar-content",
+        isOpen ? "open" : "closed"
       )}>
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="p-6 border-b border-gray-200">
+          <div className="flex items-center justify-between p-6 border-b border-gray-200">
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
-                <Video className="w-5 h-5 text-white" />
+              <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-purple-600 rounded-xl flex items-center justify-center">
+                <span className="text-white font-bold text-sm">C</span>
               </div>
-              <span className="text-xl font-semibold text-gray-900">CloseTube</span>
+              <h2 className="text-lg font-bold gradient-text">CloseTube</h2>
             </div>
+            <button
+              onClick={onClose}
+              className="p-2 rounded-xl hover:bg-gray-100 transition-colors duration-200 md:hidden"
+              aria-label="Close sidebar"
+            >
+              <X className="h-5 w-5 text-gray-600" />
+            </button>
           </div>
 
-          {/* Menu */}
-          <div className="flex-1 overflow-y-auto">
-            {/* My Channel */}
-            <div className="p-6">
-              <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-4">
-                내 채널
-              </h3>
-              <ul className="space-y-2">
-                {menuItems.map((item) => (
-                  <li key={item.id}>
-                    <button
-                      onClick={() => setActiveItem(item.id)}
-                      className={cn(
-                        "w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
-                        activeItem === item.id
-                          ? "bg-primary-50 text-primary-700"
-                          : "text-gray-700 hover:bg-gray-50"
-                      )}
-                    >
-                      <item.icon className="w-5 h-5" />
-                      <span>{item.label}</span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
+          {/* Navigation */}
+          <nav className="flex-1 px-4 py-6 space-y-2">
+            <div className="space-y-1">
+              {navigation.map((item) => (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors duration-200 group"
+                >
+                  <div className="flex items-center space-x-3">
+                    <item.icon className="h-5 w-5 text-gray-600 group-hover:text-primary-600 transition-colors duration-200" />
+                    <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900 transition-colors duration-200">
+                      {item.name}
+                    </span>
+                  </div>
+                  {item.count && (
+                    <span className="badge badge-secondary">
+                      {item.count}
+                    </span>
+                  )}
+                </a>
+              ))}
             </div>
 
-            {/* Groups */}
-            <div className="px-6">
-              <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-4">
-                그룹
-              </h3>
-              <ul className="space-y-2">
+            {/* Groups Section */}
+            <div className="pt-6 border-t border-gray-200">
+              <div className="flex items-center justify-between px-4 mb-3">
+                <h3 className="text-sm font-semibold text-gray-900">그룹</h3>
+                <button className="p-1 rounded-lg hover:bg-gray-100 transition-colors duration-200">
+                  <ChevronRight className="h-4 w-4 text-gray-500" />
+                </button>
+              </div>
+              
+              <div className="space-y-1">
                 {groups.map((group) => (
-                  <li key={group.name}>
-                    <button className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
-                      <div className="flex items-center space-x-3">
-                        <Users className="w-5 h-5" />
-                        <span>{group.name}</span>
+                  <button
+                    key={group.name}
+                    onClick={() => setActiveGroup(group.name)}
+                    className={cn(
+                      "w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group",
+                      activeGroup === group.name
+                        ? "bg-primary-50 border border-primary-200"
+                        : "hover:bg-gray-50"
+                    )}
+                  >
+                    <div className="flex items-center space-x-3">
+                      <div className={cn(
+                        "w-8 h-8 rounded-lg flex items-center justify-center",
+                        group.color
+                      )}>
+                        <group.icon className="h-4 w-4 text-white" />
                       </div>
-                      <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
-                        {group.count}
+                      <span className={cn(
+                        "text-sm font-medium transition-colors duration-200",
+                        activeGroup === group.name
+                          ? "text-primary-700"
+                          : "text-gray-700 group-hover:text-gray-900"
+                      )}>
+                        {group.name}
                       </span>
-                    </button>
-                  </li>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-xs text-gray-500">
+                        {group.memberCount}명
+                      </span>
+                      {activeGroup === group.name && (
+                        <div className="w-2 h-2 bg-primary-500 rounded-full"></div>
+                      )}
+                    </div>
+                  </button>
                 ))}
-              </ul>
+              </div>
             </div>
+          </nav>
 
-            {/* Tools */}
-            <div className="px-6 mt-6">
-              <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-4">
-                도구
-              </h3>
-              <ul className="space-y-2">
-                {tools.map((tool) => (
-                  <li key={tool.label}>
-                    <button className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
-                      <tool.icon className="w-5 h-5" />
-                      <span>{tool.label}</span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
+          {/* Footer */}
+          <div className="p-4 border-t border-gray-200">
+            <div className="flex items-center space-x-3 p-3 rounded-xl bg-gradient-to-r from-primary-50 to-purple-50 border border-primary-100">
+              <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-purple-600 rounded-xl flex items-center justify-center">
+                <Star className="h-5 w-5 text-white" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-medium text-gray-900">프리미엄 업그레이드</p>
+                <p className="text-xs text-gray-600">더 많은 기능을 사용해보세요</p>
+              </div>
             </div>
           </div>
         </div>
-      </nav>
+      </div>
     </>
-  )
+  );
 } 
