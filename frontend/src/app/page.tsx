@@ -7,6 +7,7 @@ import VideoCard from '@/components/VideoCard';
 import UploadModal from '@/components/UploadModal';
 import { Video } from '@/types';
 import { fetchVideos, createVideo } from '@/lib/api';
+import { Sparkles, TrendingUp, Users, Clock, Heart, Upload } from 'lucide-react';
 
 export default function Home() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -144,15 +145,22 @@ export default function Home() {
     : videos.filter(video => video.group === activeFilter);
 
   const filters = [
-    { id: 'all', name: '전체', count: videos.length },
-    { id: 'family', name: '가족', count: videos.filter(v => v.group === '가족').length },
-    { id: 'friends', name: '친구들', count: videos.filter(v => v.group === '친구들').length },
-    { id: 'work', name: '팀 프로젝트', count: videos.filter(v => v.group === '팀 프로젝트').length },
-    { id: 'hobby', name: '동호회', count: videos.filter(v => v.group === '동호회').length },
+    { id: 'all', name: '전체', count: videos.length, icon: Sparkles },
+    { id: 'family', name: '가족', count: videos.filter(v => v.group === '가족').length, icon: Heart },
+    { id: 'friends', name: '친구들', count: videos.filter(v => v.group === '친구들').length, icon: Users },
+    { id: 'work', name: '팀 프로젝트', count: videos.filter(v => v.group === '팀 프로젝트').length, icon: TrendingUp },
+    { id: 'hobby', name: '동호회', count: videos.filter(v => v.group === '동호회').length, icon: Clock },
+  ];
+
+  const stats = [
+    { label: '총 영상', value: videos.length, icon: Upload },
+    { label: '총 조회수', value: videos.reduce((sum, v) => sum + v.views, 0), icon: TrendingUp },
+    { label: '총 좋아요', value: videos.reduce((sum, v) => sum + v.likes, 0), icon: Heart },
+    { label: '총 댓글', value: videos.reduce((sum, v) => sum + v.comments, 0), icon: Users },
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50">
       {/* Header */}
       <Header 
         onMenuToggle={() => setSidebarOpen(true)}
@@ -177,37 +185,57 @@ export default function Home() {
         {/* Content Area */}
         <div className="flex-1 min-w-0">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            {/* Welcome Section */}
-            <div className="mb-8 fade-in">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                안녕하세요! 👋
+            {/* Hero Section */}
+            <div className="text-center mb-12 fade-in">
+              <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-indigo-100 to-purple-100 px-4 py-2 rounded-full border border-indigo-200/50 mb-6">
+                <Sparkles className="h-4 w-4 text-indigo-600" />
+                <span className="text-sm font-semibold text-indigo-700">CloseTube Premium</span>
+              </div>
+              <h1 className="section-title">
+                소중한 순간을<br />
+                <span className="hero-gradient">함께 공유하세요</span>
               </h1>
-              <p className="text-lg text-gray-600">
-                오늘은 어떤 영상을 공유하고 싶으신가요?
+              <p className="section-subtitle">
+                가족, 친구, 팀과 함께 안전하고 프라이빗하게 영상을 공유하는 새로운 경험을 시작하세요
               </p>
             </div>
 
+            {/* Stats Section */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12 slide-up">
+              {stats.map((stat, index) => (
+                <div key={index} className="stats-card">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-xl flex items-center justify-center">
+                      <stat.icon className="h-5 w-5 text-indigo-600" />
+                    </div>
+                    <div>
+                      <div className="stats-number">{stat.value.toLocaleString()}</div>
+                      <div className="stats-label">{stat.label}</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
             {/* Filters */}
-            <div className="mb-8 slide-up">
-              <div className="flex items-center space-x-2 overflow-x-auto scrollbar-hide pb-2">
+            <div className="mb-12 slide-up">
+              <h2 className="text-2xl font-bold text-slate-800 mb-6">카테고리별 영상</h2>
+              <div className="flex items-center space-x-3 overflow-x-auto scrollbar-hide pb-4">
                 {filters.map((filter) => (
                   <button
                     key={filter.id}
                     onClick={() => setActiveFilter(filter.id)}
                     className={`
-                      flex items-center space-x-2 px-4 py-2 rounded-xl whitespace-nowrap transition-all duration-200
-                      ${activeFilter === filter.id
-                        ? 'bg-primary-100 text-primary-700 border border-primary-200'
-                        : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'
-                      }
+                      filter-button ${activeFilter === filter.id ? 'active' : 'inactive'}
                     `}
                   >
-                    <span className="font-medium">{filter.name}</span>
+                    <filter.icon className="h-4 w-4" />
+                    <span>{filter.name}</span>
                     <span className={`
-                      text-xs px-2 py-1 rounded-full
+                      text-xs px-2 py-1 rounded-full font-semibold
                       ${activeFilter === filter.id
-                        ? 'bg-primary-200 text-primary-800'
-                        : 'bg-gray-100 text-gray-600'
+                        ? 'bg-indigo-200 text-indigo-800'
+                        : 'bg-slate-100 text-slate-600'
                       }
                     `}>
                       {filter.count}
@@ -223,10 +251,10 @@ export default function Home() {
                 {[...Array(8)].map((_, i) => (
                   <div key={i} className="card overflow-hidden">
                     <div className="skeleton aspect-video"></div>
-                    <div className="p-4 space-y-3">
-                      <div className="skeleton h-4 w-3/4"></div>
-                      <div className="skeleton h-3 w-1/2"></div>
-                      <div className="skeleton h-3 w-1/4"></div>
+                    <div className="p-6 space-y-4">
+                      <div className="skeleton h-5 w-3/4"></div>
+                      <div className="skeleton h-4 w-1/2"></div>
+                      <div className="skeleton h-4 w-1/4"></div>
                     </div>
                   </div>
                 ))}
@@ -243,19 +271,20 @@ export default function Home() {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-12">
-                <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                  </svg>
+              <div className="empty-state">
+                <div className="empty-icon">
+                  <Upload className="h-10 w-10 text-slate-400" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  영상이 없습니다
-                </h3>
-                <p className="text-gray-600 mb-6">
+                <h3 className="empty-title">
                   {activeFilter === 'all' 
                     ? '첫 번째 영상을 업로드해보세요!'
                     : '이 그룹에는 아직 영상이 없습니다.'
+                  }
+                </h3>
+                <p className="empty-description">
+                  {activeFilter === 'all' 
+                    ? '소중한 순간을 기록하고 사랑하는 사람들과 공유해보세요'
+                    : '이 그룹에 첫 번째 영상을 업로드해보세요'
                   }
                 </p>
                 {activeFilter === 'all' && (
@@ -263,6 +292,7 @@ export default function Home() {
                     onClick={() => setUploadModalOpen(true)}
                     className="btn-primary"
                   >
+                    <Upload className="h-4 w-4 mr-2" />
                     영상 업로드하기
                   </button>
                 )}
@@ -281,39 +311,31 @@ export default function Home() {
 
       {/* Mobile Navigation */}
       <div className="mobile-nav">
-        <div className="flex items-center justify-around py-3">
-          <button className="flex flex-col items-center space-y-1 p-2 rounded-xl hover:bg-gray-100 transition-colors duration-200">
-            <svg className="w-6 h-6 text-primary-600" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-            </svg>
-            <span className="text-xs font-medium text-primary-600">홈</span>
+        <div className="flex items-center justify-around py-4">
+          <button className="flex flex-col items-center space-y-1 p-2 rounded-2xl hover:bg-slate-100/80 transition-all duration-300">
+            <div className="w-6 h-6 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-xs">H</span>
+            </div>
+            <span className="text-xs font-medium text-indigo-600">홈</span>
           </button>
-          <button className="flex flex-col items-center space-y-1 p-2 rounded-xl hover:bg-gray-100 transition-colors duration-200">
-            <svg className="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-            </svg>
-            <span className="text-xs font-medium text-gray-500">내 영상</span>
+          <button className="flex flex-col items-center space-y-1 p-2 rounded-2xl hover:bg-slate-100/80 transition-all duration-300">
+            <Upload className="h-6 w-6 text-slate-500" />
+            <span className="text-xs font-medium text-slate-500">내 영상</span>
           </button>
           <button 
             onClick={() => setUploadModalOpen(true)}
-            className="flex flex-col items-center space-y-1 p-3 bg-primary-600 text-white rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300"
+            className="flex flex-col items-center space-y-1 p-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-2xl shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 transition-all duration-300"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-            </svg>
+            <Upload className="h-6 w-6" />
             <span className="text-xs font-medium">업로드</span>
           </button>
-          <button className="flex flex-col items-center space-y-1 p-2 rounded-xl hover:bg-gray-100 transition-colors duration-200">
-            <svg className="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-            </svg>
-            <span className="text-xs font-medium text-gray-500">좋아요</span>
+          <button className="flex flex-col items-center space-y-1 p-2 rounded-2xl hover:bg-slate-100/80 transition-all duration-300">
+            <Heart className="h-6 w-6 text-slate-500" />
+            <span className="text-xs font-medium text-slate-500">좋아요</span>
           </button>
-          <button className="flex flex-col items-center space-y-1 p-2 rounded-xl hover:bg-gray-100 transition-colors duration-200">
-            <svg className="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
-            <span className="text-xs font-medium text-gray-500">프로필</span>
+          <button className="flex flex-col items-center space-y-1 p-2 rounded-2xl hover:bg-slate-100/80 transition-all duration-300">
+            <Users className="h-6 w-6 text-slate-500" />
+            <span className="text-xs font-medium text-slate-500">프로필</span>
           </button>
         </div>
       </div>
