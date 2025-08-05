@@ -192,7 +192,7 @@
   }
 
   .nav-item {
-    @apply flex items-center space-x-3 px-5 py-4 rounded-2xl hover:bg-slate-50/80 transition-all duration-300 group;
+    @apply flex items-center space-x-3 px-5 py-4 rounded-2xl hover:bg-slate-50/80 transition-all duration-300;
   }
 
   .nav-item.active {
