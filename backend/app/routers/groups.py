@@ -1,9 +1,9 @@
 from fastapi import APIRouter
-from typing import List, Dict
+from typing import List, Dict, Any
 
 router = APIRouter(prefix="/groups", tags=["groups"])
 
-@router.get("/", response_model=List[Dict[str, any]])
+@router.get("/", response_model=List[Dict[str, Any]])
 async def get_groups():
     """그룹 목록 조회"""
     groups = [
