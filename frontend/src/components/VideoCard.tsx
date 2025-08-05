@@ -14,11 +14,11 @@ export default function VideoCard({ video, onLike, onComment }: VideoCardProps) 
   return (
     <div className="video-card group">
       <div className="card card-hover overflow-hidden">
-        {/* Thumbnail */}
+      {/* Thumbnail */}
         <div className="video-thumbnail relative">
-          <img
-            src={video.thumbnail}
-            alt={video.title}
+        <img
+          src={video.thumbnail}
+          alt={video.title}
             className="w-full h-full object-cover"
           />
           
@@ -27,8 +27,8 @@ export default function VideoCard({ video, onLike, onComment }: VideoCardProps) 
             <div className="w-20 h-20 bg-white/20 backdrop-blur-xl rounded-full flex items-center justify-center border border-white/40 shadow-2xl group-hover:scale-110 transition-transform duration-500">
               <Play className="h-8 w-8 text-white ml-1" fill="white" />
             </div>
-          </div>
-
+        </div>
+        
           {/* Duration badge */}
           <div className="absolute bottom-3 right-3 bg-black/80 backdrop-blur-md text-white text-xs px-3 py-1.5 rounded-xl font-semibold border border-white/20">
             {formatDuration(video.duration)}
@@ -45,17 +45,17 @@ export default function VideoCard({ video, onLike, onComment }: VideoCardProps) 
               <span className="badge badge-primary">
                 {video.group}
               </span>
-            </div>
-          )}
         </div>
+          )}
+      </div>
 
         {/* Content */}
         <div className="p-6">
           {/* Title and author */}
           <div className="mb-4">
             <h3 className="font-bold text-slate-900 line-clamp-2 mb-2 group-hover:text-indigo-600 transition-colors duration-300 text-lg leading-tight">
-              {video.title}
-            </h3>
+          {video.title}
+        </h3>
             <div className="flex items-center space-x-2 text-sm text-slate-600">
               <div className="w-6 h-6 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center">
                 <User className="h-3 w-3 text-indigo-600" />
@@ -88,8 +88,8 @@ export default function VideoCard({ video, onLike, onComment }: VideoCardProps) 
                 <span className="font-medium">{formatDate(video.uploadDate)}</span>
               </div>
             </div>
-          </div>
-
+        </div>
+        
           {/* Actions */}
           <div className="flex items-center justify-between pt-4 border-t border-slate-100">
             <div className="flex items-center space-x-2">

@@ -28,11 +28,11 @@ export default function Home() {
       console.error('Failed to load videos:', error);
       // Fallback to mock data
       setVideos([
-        {
-          id: '1',
+  {
+    id: '1',
           title: '아름다운 자연 풍경',
           description: '자연의 아름다움을 담은 영상입니다.',
-          url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
           thumbnail: 'https://picsum.photos/400/225?random=1',
           author: '자연사랑',
           views: 1234,
@@ -43,12 +43,12 @@ export default function Home() {
           createdAt: new Date('2024-01-15'),
           isLiked: false,
           group: '가족'
-        },
-        {
-          id: '2',
+  },
+  {
+    id: '2',
           title: '요리 레시피: 파스타 만들기',
           description: '집에서 쉽게 만들 수 있는 파스타 레시피입니다.',
-          url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
           thumbnail: 'https://picsum.photos/400/225?random=2',
           author: '쿡마스터',
           views: 5678,
@@ -59,12 +59,12 @@ export default function Home() {
           createdAt: new Date('2024-01-14'),
           isLiked: true,
           group: '친구들'
-        },
-        {
-          id: '3',
+  },
+  {
+    id: '3',
           title: '여행 브이로그: 제주도',
           description: '제주도의 아름다운 풍경을 담은 여행 영상입니다.',
-          url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
           thumbnail: 'https://picsum.photos/400/225?random=3',
           author: '트래블러',
           views: 3456,
@@ -75,12 +75,12 @@ export default function Home() {
           createdAt: new Date('2024-01-13'),
           isLiked: false,
           group: '동호회'
-        },
-        {
-          id: '4',
+  },
+  {
+    id: '4',
           title: '운동 루틴: 홈 트레이닝',
           description: '집에서 할 수 있는 효과적인 운동 루틴입니다.',
-          url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
           thumbnail: 'https://picsum.photos/400/225?random=4',
           author: '피트니스코치',
           views: 7890,
@@ -162,11 +162,11 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50">
       {/* Header */}
-      <Header 
+        <Header 
         onMenuToggle={() => setSidebarOpen(true)}
-        onUploadClick={() => setUploadModalOpen(true)}
-      />
-
+          onUploadClick={() => setUploadModalOpen(true)}
+        />
+        
       {/* Sidebar */}
       <Sidebar 
         isOpen={sidebarOpen}
@@ -217,12 +217,12 @@ export default function Home() {
               ))}
             </div>
 
-            {/* Filters */}
+          {/* Filters */}
             <div className="mb-12 slide-up">
               <h2 className="text-2xl font-bold text-slate-800 mb-6">카테고리별 영상</h2>
               <div className="flex items-center space-x-3 overflow-x-auto scrollbar-hide pb-4">
-                {filters.map((filter) => (
-                  <button
+            {filters.map((filter) => (
+              <button
                     key={filter.id}
                     onClick={() => setActiveFilter(filter.id)}
                     className={`
@@ -240,10 +240,10 @@ export default function Home() {
                     `}>
                       {filter.count}
                     </span>
-                  </button>
-                ))}
+              </button>
+            ))}
               </div>
-            </div>
+          </div>
 
             {/* Videos Grid */}
             {loading ? (
@@ -261,15 +261,15 @@ export default function Home() {
               </div>
             ) : filteredVideos.length > 0 ? (
               <div className="video-grid">
-                {filteredVideos.map((video) => (
-                  <VideoCard
-                    key={video.id}
-                    video={video}
+            {filteredVideos.map((video) => (
+              <VideoCard
+                key={video.id}
+                video={video}
                     onLike={handleLike}
                     onComment={handleComment}
-                  />
-                ))}
-              </div>
+              />
+            ))}
+          </div>
             ) : (
               <div className="empty-state">
                 <div className="empty-icon">
@@ -296,8 +296,8 @@ export default function Home() {
                     영상 업로드하기
                   </button>
                 )}
-              </div>
-            )}
+            </div>
+          )}
           </div>
         </div>
       </div>
