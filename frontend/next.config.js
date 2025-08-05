@@ -4,7 +4,12 @@ const nextConfig = {
     appDir: true,
   },
   images: {
-    domains: ['via.placeholder.com', 'img.youtube.com', 'i.ytimg.com'],
+    domains: [
+      'via.placeholder.com',
+      'picsum.photos',
+      'img.youtube.com',
+      'www.instagram.com',
+    ],
   },
 }
 
